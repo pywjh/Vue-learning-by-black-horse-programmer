@@ -36,7 +36,7 @@
 
 + 筛选框绑定到 VM 实例中的 `searchName` 属性：
 
-```
+```html
 
 <hr> 输入筛选名称：
 
@@ -46,7 +46,7 @@
 
 + 在使用 `v-for` 指令循环每一行数据的时候，不再直接 `item in list`，而是 `in` 一个 过滤的methods 方法，同时，把过滤条件`searchName`传递进去：
 
-```
+```html
 
 <tbody>
 
@@ -72,7 +72,7 @@
 
 + `search` 过滤方法中，使用 数组的 `filter` 方法进行过滤：
 
-```
+```javascript
 
 search(name) {
 
@@ -98,7 +98,7 @@ search(name) {
 
 1. HTML元素：
 
-```
+```HTML
 
 <td>{{item.ctime | dataFormat('yyyy-mm-dd')}}</td>
 
@@ -106,7 +106,7 @@ search(name) {
 
 2. 私有 `filters` 定义方式：
 
-```
+```javascript
 
 filters: { // 私有局部过滤器，只能在 当前 VM 对象所控制的 View 区域进行使用
 
@@ -164,7 +164,7 @@ filters: { // 私有局部过滤器，只能在 当前 VM 对象所控制的 Vie
 
 ### 全局过滤器
 
-```
+```javascript
 
 // 定义一个全局过滤器
 
@@ -220,7 +220,7 @@ Vue.filter('dataFormat', function (input, pattern = '') {
 
 ### 1.x中自定义键盘修饰符【了解即可】
 
-```
+```javascript
 
 Vue.directive('on').keyCodes.f2 = 113;
 
@@ -230,7 +230,7 @@ Vue.directive('on').keyCodes.f2 = 113;
 
 1. 通过`Vue.config.keyCodes.名称 = 按键值`来自定义案件修饰符的别名：
 
-```
+```javascript
 
 Vue.config.keyCodes.f2 = 113;
 
@@ -238,7 +238,7 @@ Vue.config.keyCodes.f2 = 113;
 
 2. 使用自定义的按键修饰符：
 
-```
+```html
 
 <input type="text" v-model="name" @keyup.f2="add">
 
@@ -252,7 +252,7 @@ Vue.config.keyCodes.f2 = 113;
 
 1. 自定义全局和局部的 自定义指令：
 
-```
+```javascript
 
     // 自定义全局指令 v-focus，为绑定的元素自动获取焦点：
 
@@ -294,7 +294,7 @@ Vue.config.keyCodes.f2 = 113;
 
 2. 自定义指令的使用方式：
 
-```
+```html
 
 <input type="text" v-model="searchName" v-focus v-color="'red'" v-font-weight="900">
 
@@ -351,7 +351,7 @@ Vue.elementDirective('red-color', {
  	- 服务器数据接口组织好要发送给客户端的数据，再拿着客户端传递过来的回调方法名称，拼接出一个调用这个方法的字符串，发送给客户端去解析执行；
  	- 客户端拿到服务器返回的字符串之后，当作Script脚本去解析执行，这样就能够拿到JSONP的数据了；
  + 带大家通过 Node.js ，来手动实现一个JSONP的请求例子；
- ```
+ ```js
     const http = require('http');
     // 导入解析 URL 地址的核心模块
     const urlModule = require('url');
@@ -392,7 +392,7 @@ Vue.elementDirective('red-color', {
  + 直接在页面中，通过`script`标签，引入 `vue-resource` 的脚本文件；
  + 注意：引用的先后顺序是：先引用 `Vue` 的脚本文件，再引用 `vue-resource` 的脚本文件；
 6. 发送get请求：
-```
+```js
 getInfo() { // get 方式获取数据
   this.$http.get('http://127.0.0.1:8899/api/getlunbo').then(res => {
     console.log(res.body);
@@ -400,7 +400,7 @@ getInfo() { // get 方式获取数据
 }
 ```
 7. 发送post请求：
-```
+```js
 postInfo() {
   var url = 'http://127.0.0.1:8899/api/post';
   // post 方法接收三个参数：
@@ -413,7 +413,7 @@ postInfo() {
 }
 ```
 8. 发送JSONP请求获取数据：
-```
+```js
 jsonpInfo() { // JSONP形式从服务器获取数据
   var url = 'http://127.0.0.1:8899/api/jsonp';
   this.$http.jsonp(url).then(res => {

@@ -89,7 +89,7 @@
 
 1. HTML结构：
 
-```
+```html
 
 <div id="app">
 
@@ -105,7 +105,7 @@
 
 2. Vue实例：
 
-```
+```javascript
 
 	// 创建 Vue 实例，得到 ViewModel
 
@@ -195,7 +195,7 @@
 
 1. HTML 代码结构
 
-```
+```html
 
   <div id="app">
 
@@ -225,7 +225,7 @@
 
 2. Vue实例代码：
 
-```
+```js
 
 	// 创建 Vue 实例，得到 ViewModel
 
