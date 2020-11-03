@@ -49,7 +49,7 @@
         <tr v-for="item in list" :key="item.id">
           <td>{{item.id}}</td>
           <td>{{item.title}}</td>
-          <td>{{item.add_time}}</td>
+          <td>{{item.add_time | dataFormat()}}</td>
           <td>{{item.zhaiyao}}</td>
           <td>{{item.click}}</td>
           <td><img :src="item.img_url" :alt="item.title"></td>
@@ -68,6 +68,11 @@
     Vue.http.options.root = 'http://www.liulongbin.top:3005/';
     // 全局启用 emulateJSON 选项
     Vue.http.options.emulateJSON = true;
+
+    Vue.filter('dataFormat', (data) => {
+      var date = new Date(data)
+      return `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`
+    })
 
     // 创建 Vue 实例，得到 ViewModel
     var vm = new Vue({
