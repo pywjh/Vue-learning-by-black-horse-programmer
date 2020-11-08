@@ -1,243 +1,40 @@
-<?xml version="1.0"?>
-<form string="&#x63D0;&#x5355;" create="false">
-                    <header>
-                        <button name="update_price_vat" string="完税价更新" type="object" class="btn-primary" invisible="1"/>
-                        <button name="update_charge_partner" string="收费明细联系人更新" type="object" class="btn-primary" invisible="1"/>
+<!DOCTYPE html>
+<html lang="en">
 
-                        <button name="616" string="创建付汇申请单" type="action" class="btn-primary" attrs="{'invisible': ['|','|','|',('state', 'in', ['draft']),('lc_card', '=', True),('old_proportion', '&gt;=', '100')]}" context="{ 'default_agency_order_id': agency_order_id,                                            'default_payment_type': 'DB',                                            'default_purchase_order_id': purchase_order_id,                                            'default_partner_id': customer_id,                                            'default_partner_id_done': partner_id_done,                                            'default_supplier': supply_id,                                            'default_company_id': company_id,                                            'default_business_config_id': business_config_id,                                            'default_area_config_id': area_config_id,                                            'default_currency_id_pay': currency_id,                                            'default_currency_id': currency_id,                                            'default_currency_id_cny': currency_id_cny,                                            'default_fr_agency_bank': fr_agency_bank,                                            'default_payment_amount': bill_payable,                                            'default_lading_bill_id': id,                                            'default_bill_sheep_id': customs,                                            }"/>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./lib/vue-2.4.0.js"></script>
+</head>
 
-                        <button name="submit_approval" string="确认提单" type="object" class="btn-primary" states="draft"/>
-                        <button name="confirm_approval" string="同意" type="object" class="btn-primary" states="sent"/>
-                        <button name="reject_approval" string="驳回" type="object" class="btn-primary" states="sent"/>
-                        <button name="done_approval" string="完成" type="object" class="btn-primary" states="sale"/>
-                        <button name="cancel_approval" string="取消" type="object" states="sent,draft" invisible="1"/>
+<body>
+  <div id="app">
+    <mycom1></mycom1>
+  </div>
 
-                        <button name="create_virtualenv_in" id="create_virtualenv_in" string="重新生成虚拟入库单\应收应付" class="btn-primary" type="object" states="done"/>
+  <script>
+    // 1. 组件可以有自己的 data 数据
+    // 2. 组件的 data 和 实例的 data 有点不一样,实例中的 data 可以为一个对象,但是 组件中的 data 必须是一个方法
+    // 3. 组件中的 data 除了必须为一个方法之外,这个方法内部,还必须返回一个对象才行;
+    // 4. 组件中 的data 数据,使用方式,和实例中的 data 使用方式完全一样!!!
+    Vue.component('mycom1', {
+      template: '<h1>这是全局组件 --- {{msg}}</h1>',
+      data: function () {
+        return {
+          msg: '这是组件的中data定义的数据'
+        }
+      }
+    })
 
-                        <button name="again_create_invoice" id="again_create_invoice" string="重新生成应收应付单" class="btn-primary" type="object" states="done"/>
+    // 创建 Vue 实例，得到 ViewModel
+    var vm = new Vue({
+      el: '#app',
+      data: {},
+      methods: {}
+    });
+  </script>
+</body>
 
-                        <button name="update_financing_is" id="update_financing_is" string="修改非融资" class="btn-primary" type="object" invisible="1"/>
-
-                        <field name="state" options="{'clickable': '1'}" widget="statusbar" statusbar_visible="draft,sent,sale,done"/>
-
-                    </header>
-                    <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="1815" string="承兑通知" type="action" icon="fa-archive" class="oe_stat_button" attrs="{'invisible': ['|',('state', 'in', ['draft','sent']),('lc_card', '=', False)]}">
-                            </button>
-
-                            <button name="1408" string="付汇单" type="action" icon="fa-archive" class="oe_stat_button" attrs="{'invisible': ['|','|','|',('state', 'in', ['draft']),('lc_card', '=', True),('old_proportion', '&gt;=', '100')]}">
-                                <field name="payment_number"/>
-                            </button>
-
-                            <button name="606" string="应收" type="action" icon="fa-archive" class="oe_stat_button" context="{'agency_order_id': agency_order_id}" attrs="{'invisible': [('state', 'in', ['draft','sent'])]}">
-                                <field name="invoice_number"/>
-                            </button>
-
-                            <button name="609" string="应付" type="action" icon="fa-archive" class="oe_stat_button" context="{'agency_order_id': agency_order_id}" attrs="{'invisible': [('state', 'in', ['draft','sent'])]}">
-                                <field name="accounts_payable"/>
-                            </button>
-
-                            <button name="1746" string="虚拟入库单" type="action" icon="fa-edit" class="oe_stat_button" attrs="{'invisible': [('invoice_deduction', '!=', 'company')]}">
-                            </button>
-
-                        </div>
-                        <div class="oe_title">
-                            <h1>
-                                <field name="num"/>
-                            </h1>
-                        </div>
-                        <group>
-                            <group>
-                                <field name="lc_card" invisible="1"/>
-                                <field name="currency_id" string="代理订单币种" readonly="1" force_save="1"/>
-                                <field name="currency_id_cny" string="代理订单币种(CNY)" readonly="1" force_save="1" invisible="1"/>
-                                <field name="supply_id" string="供应商" domain="[('supplier','=',True)]" required="1"/>
-                                <field name="customer_id" string="委托方" domain="[('fr_res_type_state', '=', True),('is_exp', '=', True),('customer','=',True)]" required="1"/>
-                                <field name="partner_id_done" string="客户下家" domain="[('fr_res_type_state', '=', True),('is_exp', '=', True),('customer','=',True)]"/>
-                                <field name="middle_partner_id" string="中间商" options="{'no_create': True, 'no_open':True, 'on_edit':True}" domain="[('supplier','=',True),('fr_res_type_state', '=', True)]"/>
-                                <field name="company_id" string="签订公司" invisible="1"/>
-                                <field name="purchase_order_id" string="采购订单" readonly="1" force_save="1"/>
-                                <field name="agency_order_id" string="代理订单" readonly="1" force_save="1"/>
-                                <field name="company_id" string="所属公司" readonly="1" force_save="1"/>
-                                <field name="business_config_id" string="所属业务" readonly="1" force_save="1" invisible="1"/>
-                                <field name="area_config_id" string="所属地域" readonly="1" force_save="1" invisible="1"/>
-                                <field name="bill_type" string="提单类型"/>
-                                <field name="create_uid" string="业务员"/>
-                                <field name="bill_coefficient" string="提成系数" domain="['|',('user_id.id','=', create_uid),('partner_id', '=', customer_id)]"/>
-                                <field name="salesman_commission" string="业务提成单" readonly="1" force_save="1"/>
-                                <field name="credit_letter_id" string="信用证" domain="[('agency_order_id','=', agency_order_id)]" options="{'no_create': True, 'no_open':True, 'on_edit':True}"/>
-                                <field name="lc_card" string="信用证提单"/>
-                                <field name="endangered_id" string="濒危证" options="{'no_create': True, 'no_open':True, 'on_edit':True}"/>
-                            </group>
-
-                            <group>
-                                <field name="sign_date" string="日期"/>
-                                <field name="sum_amount_total" string="提单合同金额"/>
-                                <field name="tank_num_sum" string="柜数量" invisible="1"/>
-                                <field name="qty_amount_sum" string="立方数"/>
-                                <field name="fr_agency_bank" string="指定银行" invisible="1" domain="[('supplier','=',True),('fr_bank_partner', '=', True)]" options="{'no_create': True, 'no_open':True, 'on_edit':True}"/>
-                                <field name="last_ship_date" string="最迟装船日期"/>
-                                <field name="expect_port" string="预计到港日期" decoration-danger="expect_port &lt; current_date"/>
-
-                                <field name="arrive_date" string="到港日期" decoration-warning="(arrive_date &gt; expect_port)" attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
-                                <field name="shipment_port" string="装运港口" options="{'no_create': True, 'no_open':True, 'on_edit':True}"/>
-                                <field name="unloading_port" string="目的港口" options="{'no_create': True, 'no_open':True, 'on_edit':True}" required="1"/>
-                                <field name="production_manufacturers" string="生产国/原产地" options="{'no_create': True, 'no_open':True, 'on_edit':True}"/>
-                                <field name="ship_id" string="货船公司"/>
-                                <field name="customs" string="船运提单号"/>
-                                <field name="short_shipped" string="短溢装比例" readonly="1" force_save="1"/>
-                                <field name="invoice_deduction" string="发票抵扣" attrs="{'invisible': [('state', 'in', ['draft','sent'])]                                        }"/>
-
-                                <field name="customer_tax" string="海关税率" attrs="{'invisible': [('state', 'in', ['draft','sent'])]                                        }"/>
-                                <field name="conversion_rate" string="外汇折算汇率" attrs="{'invisible': [('state', 'in', ['draft','sent'])],                                        }"/>
-                                <field name="tariffs_is" string="是否有关税" attrs="{'invisible': [('state', 'in', ['draft','sent'])]}"/>
-                                <field name="customs_taxes" string="增值税合计"/>
-                                <field name="customs_dutiable" string="完税价合计"/>
-                                <field name="customs_tariffs" string="关税合计" attrs="{'invisible': [('tariffs_is', '=', False)]}"/>
-
-                                <field name="customs_taxes_sum" string="货物总值"/>
-                                <field name="is_financing" string="是否融资"/>
-                                <field name="is_end" string="是否为最后一单"/>
-                                <field name="id" invisible="1"/>
-                                <field name="tank_no" string="柜号" widget="many2many_tags" domain="[('tank_no', 'in', [id])]" context="{'default_lading_bill_id': id,                                           'default_company_id': company_id,                                           'default_business_config_id': business_config_id,                                           'default_area_config_id': area_config_id,                                           'default_supply_id': supply_id,                                           'default_customer_id': customer_id,                                           'default_purchase_order_id': purchase_order_id,                                           'default_credit_order_id': credit_letter_id,                                           'default_currency_id': currency_id,                                           'default_currency_id_cny': currency_id_cny,                                           'default_customs': customs,                                           'default_ship_id': ship_id,                                           'default_agency_order_id': agency_order_id,                                           'default_is_financing': is_financing,                                           }" attrs="{'invisible': [('state', 'in', ['draft'])]}"/>
-                                <field name="tank_num_20" string="20柜数量" attrs="{'invisible': [('state', 'in', ['draft'])]}" required="1"/>
-                                <field name="tank_num_40" string="40柜数量" attrs="{'invisible': [('state', 'in', ['draft'])]}" required="1"/>
-                                <field name="customs_declaration" string="报关单号" invisible="1"/>
-                                <field name="trade_config_id" string="贸易方式" invisible="1"/>
-                                <field name="cloud_is" string="是否转入云仓" readonly="1" force_save="1" invisible="1"/>
-                                <field name="financing_is" string="已转融资" readonly="1" force_save="1" invisible="1"/>
-                                <field name="redemption_is" string="已赎单" readonly="1" force_save="1" invisible="1"/>
-                            </group>
-                        </group>
-                        <group>
-                            <group>
-                                <field name="attachment" string="上传提单" widget="FieldBinary" filename="file_name"/>
-                                <field name="file_name" invisible="1"/>
-                                <field name="sum_amount_total_ts" string="提单合同金额(特殊情况)"/>
-                            </group>
-                            <group>
-                                <button name="cargo_ship_select" string="船运信息查询" type="object" class="btn-primary"/>
-                            </group>
-                        </group>
-
-                        <notebook>
-                            <page string="提单货物明细">
-                                <field name="lading_cargo_line_ids" attrs="{'readonly': [('state', 'in', ('cancel'))]}">
-                                    <tree string="货物明细行" editable="bottom">
-                                        <field name="product_id" string="品名" domain="[('type','=', 'storage')]"/>
-                                        <field name="ark_specifications" string="柜规格"/>
-                                        <field name="tank_no" string="柜号" invisible="1"/>
-                                        <field name="product_en" string="英文品名"/>
-                                        <field name="specifications_describe" string="产品规格"/>
-                                        <field name="material" string="产品类别" invisible="1"/>
-                                        <field name="level" string="等级"/>
-                                        <field name="brand_name" string="品牌" options="{'no_create': True, 'no_open':True, 'on_edit':True}" invisible="1"/>
-                                        <field name="qty" string="采购数量" force_save="1"/>
-                                        <field name="uom_id_f" string="采购计量单位"/>
-                                        <field name="qty_amount" string="数量"/>
-                                        <field name="uom_id" string="计量单位"/>
-                                        <field name="price_unit" string="采购单价" force_save="1"/>
-                                        <field name="allowance" string="剩余未发货量" invisible="1" readonly="1" force_save="1"/>
-                                        <field name="allowance_no" string="剩余未发量" readonly="1" force_save="1"/>
-                                        <field name="arrival" string="本次已发货量"/>
-                                        <field name="subtotal" string="小计"/>
-                                        <field name="currency_id" string="订单币种" readonly="1" force_save="1" options="{'no_create': True, 'no_open':True, 'on_edit':True}"/>
-                                        <field name="note" string="备注"/>
-                                        <field name="delivery_ratio" string="发货比例" widget="percentage"/>
-                                        <field name="currency_id_cny" string="海关币种(CNY)" invisible="1" attrs="{'column_invisible': [('parent.state', 'in', ['draft','sent'])],                                                        'required': [('parent.state', 'not in', ['draft','sent'])]}" readonly="1" force_save="1" options="{'no_create': True, 'no_open':True, 'on_edit':True}"/>
-
-                                        <field name="tax_id" string="海关税率" invisible="1" attrs="{'column_invisible': [('parent.state', 'in', ['draft','sent','sale', 'done'])]}"/>
-
-                                        <field name="price_vat" string="增值税税额" invisible="1" attrs="{'column_invisible': [('parent.state', 'in', ['draft','sent'])],                                                        'required': [('parent.state', 'not in', ['draft','sent'])]}"/>
-
-                                        <field name="price_tariffs" string="关税" attrs="{'column_invisible': ['|',('parent.state', 'in', ['draft','sent']),('parent.tariffs_is', '=', False)],                                                        'required': [('parent.state', 'not in', ['draft','sent'])]}"/>
-
-                                        <field name="tax_amount" string="海关完税价格" attrs="{'column_invisible': [('parent.state', 'in', ['draft','sent'])],                                                        'required': [('parent.state', 'not in', ['draft','sent'])]}"/>
-
-                                        <field name="tax_amount_monetary" string="增值税税额" attrs="{'column_invisible': [('parent.state', 'in', ['draft','sent'])],                                                        'required': [('parent.state', 'not in', ['draft','sent'])]}"/>
-
-                                        <field name="qty_amount_hg" string="海关结算数量" invisible="1" attrs="{'column_invisible': [('parent.state', 'in', ['draft','sent'])]}"/>
-
-                                        <field name="uom_id_h" string="海关计量单位" invisible="1" attrs="{'column_invisible': [('parent.state', 'in', ['draft','sent'])],                                                        'required': [('parent.state', 'not in', ['draft','sent'])]}"/>
-                                        <field name="price_unit_in" string="销售单价" invisible="1" attrs="{'column_invisible': [('parent.invoice_deduction', '!=', 'company')]}"/>
-                                        <field name="agency_order_line_bill" string="代理订单行ID" invisible="1"/>
-                                        <field name="amount_untaxed" invisible="1"/>
-                                        <field name="amount_tax" invisible="1"/>
-                                        <field name="amount_total" invisible="1"/>
-                                    </tree>
-                                </field>
-                                <group class="oe_subtotal_footer oe_right">
-                                    <field name="amount_total_goods" string="到货总计"/>
-                                    <field name="amount_untaxed" widget="monetary" string="不含税总计(订单)" options="{'currency_field': 'currency_id'}"/>
-                                    <div class="oe_subtotal_footer_separator oe_inline">
-                                        <label for="amount_total" string="总计(订单)"/>
-                                    </div>
-                                    <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" string="总计(订单)" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                </group>
-                                <group>
-                                    <group>
-                                        <field name="customs_declaration" string="税单号" attrs="{'invisible': [('state', 'in', ['draft','sent'])],                                                 }"/>
-                                    </group>
-                                    <group>
-                                        <field name="Bill_date" string="出税日期" attrs="{'invisible': [('state', 'in', ['draft','sent'])]                                                 }"/>
-                                    </group>
-                                </group>
-                                <field name="bill_tax_ids" conetxt="{'test': 1}" attrs="{'invisible': [('state', 'in', ['draft','sent'])]}">
-                                    <tree string="税单明细行" editable="bottom">
-                                                <field name="product_id" string="品名"/>
-                                                <field name="tax_id" string="海关税率" attrs="{'column_invisible': [('parent.state', 'in', ['draft','sent','sale', 'done'])]}"/>
-                                                <field name="price_vat" string="增值税税额"/>
-                                                <field name="price_tariffs" string="关税" attrs="{'column_invisible': [('parent.tariffs_is', '=', False)]}"/>
-                                                <field name="tax_amount" string="海关完税总价"/>
-                                                <field name="qty_amount_hg" string="海关结算数量"/>
-                                                <field name="uom_id_h" string="海关计量单位"/>
-                                                <field name="currency_id_cny" string="海关币种(CNY)" options="{'no_create': True, 'no_open':True, 'on_edit':True}"/>
-                                            </tree>
-                                </field>
-                                <div class="oe_clear"/>
-                            </page>
-                            <page string="提单收费明细">
-                                <field name="lading_fee_line_ids" attrs="{'readonly': [('state', 'in', ('cancel'))]}">
-                                    <tree string="收费项" editable="bottom">
-                                        <field name="line_name" string="删除时名称" invisible="1"/>
-                                        <field name="product_id" string="产品费用名称" domain="[('categ_id.id','=','4')]"/>
-                                        <field name="product_name" string="费用名称"/>
-                                        <field name="currency_amount" string="费用金额"/>
-                                        <field name="tax_id" string="税率"/>
-                                        <field name="no_tax" string="不含税金额"/>
-                                        <field name="taxes_total" string="税率金额"/>
-                                        <field name="amount" string="含税费用总计"/>
-                                        <field name="direction" string="收付款方向"/>
-                                        <field name="partner_id" string="业务伙伴"/>
-                                        <field name="note" string="备注"/>
-                                        <field name="currency_id" string="当前币种" force_save="1" options="{'no_create': True, 'no_open':True, 'on_edit':True}"/>
-                                        <button name="create_account_receivable" string="生成(应收/应付)" type="object" class="btn-primary">
-                                        </button>
-                                    </tree>
-                                </field>
-                            </page>
-                        </notebook>
-
-
-                        <group>
-                            <group>
-                                <field name="bill_advance" string="本提单首付款金额"/>
-                                <field name="bill_payable" string="本提单应付金额" readonly="1" force_save="1"/>
-
-                                <field name="bill_proportion" string="本单首付分摊(%)" readonly="1" force_save="1" attrs="{'invisible': [('is_end', '=', True)]}"/>
-                            </group>
-                            <group>
-                                <field name="old_advance" string="已完成提单首付款金额" readonly="1" force_save="1"/>
-                                <field name="old_amount" string="已完成提单金额" readonly="1" force_save="1"/>
-                                <field name="old_proportion" string="已完成首付比例(%)" readonly="1" force_save="1"/>
-                            </group>
-                        </group>
-                    </sheet>
-                    <div class="oe_chatter" name="studio_div_59d1e2">
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="activity_ids" widget="mail_activity"/>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </div>
-                </form>
-            
+</html>
